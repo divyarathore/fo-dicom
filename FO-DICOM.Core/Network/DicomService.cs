@@ -885,7 +885,7 @@ namespace FellowOakDicom.Network
                                     await SendResponseAsync(new DicomCStoreResponse(request, new DicomStatus(DicomStatus.ProcessingFailure, errorComment))).ConfigureAwait(false);
 
                                     Logger.LogError(e, "Error parsing C-Store dataset");
-                                    await (this as IDicomCStoreProvider)?.OnCStoreRequestExceptionAsync(_dimseStreamFile?.Name, e);
+                                    await ((this as IDicomCStoreProvider)?.OnCStoreRequestExceptionAsync(_dimseStreamFile?.Name, e)).ConfigureAwait(false);
                                     return;
                                 }
                             }
@@ -1390,14 +1390,14 @@ namespace FellowOakDicom.Network
                         
                         if (deflateStream != null)
                         {
-                            await deflateStream.FlushAsync(CancellationToken.None);
+                            await deflateStream.FlushAsync(CancellationToken.None).ConfigureAwait(false);
                             
                             // Deflate stream in .NET Framework only fully flushes when disposed...
                             deflateStream.Dispose();
                         }                    
                     }
                     
-                    await pDataStream.FlushAsync(CancellationToken.None);
+                    await pDataStream.FlushAsync(CancellationToken.None).ConfigureAwait(false);
                     
                     msg.LastPDUSent = DateTime.Now;
                     msg.AllPDUsWereSentSuccessfully();
